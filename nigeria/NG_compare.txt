@@ -1,0 +1,5 @@
+For Nigeria DAD
+
+Average percentage of toolkit locations found by autogeocoder: 86.99%
+All toolkit locations found by autogeocoder: 82.69%
+No toolkit locations found by autogeocoder: 4.20%

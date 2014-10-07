@@ -8,7 +8,7 @@ import csv
 import numpy
 
 def getStats():
-    f = open('compare.csv', 'r')
+    f = open('NG_compare.csv', 'r')
     reader = csv.reader(f)
     correct = []
     incorrect = []
@@ -39,6 +39,7 @@ def getStats():
 def outputStats(correctAvg, incorrectAvg, pAllFound, pNoneFound, pIncorrectFound):
     fw = open('NG_analysis.csv', 'w')
     writer = csv.writer(fw)
+    writer.writerow(['Description', 'Percentage'])
     writer.writerow(['Average percentage of correct locations per project found by autogeocoder', "%.2f" % correctAvg])
     writer.writerow(['Average percentage of incorrect locations per project found by autogeocoder', "%.2f" % incorrectAvg])
     writer.writerow(['Projects with all correct locations found by autogeocoder out of total projects', "%.2f" % pAllFound])

@@ -1,6 +1,6 @@
 Description,Percentage
 Average percentage of correct locations per project found by autogeocoder,95.44
 Average percentage of incorrect locations per project found by autogeocoder,4.56
-Projects with all correct locations found by autogeocoder out of total projects,0.00
-Projects with no correct locations found by autogeocoder out of total projects,0.00
-Projects with some incorrect locations found by autogeocoder out of total projects,100.00
+Projects with all correct locations found by autogeocoder out of total projects,94.45
+Projects with no correct locations found by autogeocoder out of total projects,4.20
+Projects with some incorrect locations found by autogeocoder out of total projects,5.55

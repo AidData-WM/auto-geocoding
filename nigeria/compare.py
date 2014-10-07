@@ -1,7 +1,7 @@
 #
-# NG_compare.py
+# compare.py
 #
-# Compares project locations coded by Autocoder and Toolki for Nigeria DAD. 
+# Compares project locations coded by Autocoder and correct locations from Toolkit.
 #
 
 import csv
@@ -10,29 +10,34 @@ def outputCSV(matching, auto, compare):
     ''' write comparison data to csv '''
     with open('compare.csv', 'w') as f:
         writer = csv.writer(f)
-        writer.writerow(['Project ID', 'Toolkit Locations Found by Autocoder', 'All Toolkit Locations', 'All Autocoder Locations', 'Percentage of Toolkit Locations Found by Autocoder', 'All Locations Found?'])
+        # incorrect indicates not ni 
+        writer.writerow(['Project ID', 'Toolkit Locations Found by Autocoder', 'All Toolkit Locations', 'All Autocoder Locations', 'Percentage Correct of Locations Found by Autocoder', 'Percentage Incorrect of Locations Found by Autocoder'])
         for row in matching:
-            allFound = (compare[row[0]] == row[1])
-            numFound = len(compare[row[0]])
-            numTotal = len(row[1])
-            pFound = 100 * float(numFound)/float(numTotal)
-            writer.writerow([row[0], compare[row[0]], row[1], auto[row[0]], "%.2f" % pFound, allFound])
+            numCFound = len([x for x in auto[row[0]] if x in compare[row[0]]])
+            numIFound = len([x for x in auto[row[0]] if x not in compare[row[0]]])
+            numTotal = len(auto[row[0]])
+            pCFound = 100 * float(numCFound)/float(numTotal)
+            pIFound = 100 * float(numIFound)/float(numTotal)
+            writer.writerow([row[0], compare[row[0]], row[1], auto[row[0]], "%.2f" % pCFound, "%.2f" % pIFound])
     
 def compareLocs(matching):
     ''' build dictionary with project ID as key and matching locations from autocoder and toolkit as value '''
     compare = {}
     auto = {}
     for row in matching:
+        # search for autocoder location matches in toolkit in order of precision
+        # if autocoder found ADM2 locations, look for ADM2 matches in toolkit
         if len(row[2][0]) != 0:
             compare[row[0]] = sorted(list(set(row[2][0]).intersection(row[1])))
             auto[row[0]] = row[2][0]
-        elif len(row[2][1]) != 0:
+        # if autocoder found ADM1 locations and no ADM2 locations or ADM2 location matches, look for ADM1 matches in toolkit
+        if (row[0] not in compare.keys()) and (len(row[2][1]) != 0):
             compare[row[0]] = sorted(list(set(row[2][1]).intersection(row[1])))
             auto[row[0]] = row[2][1]
-            
-        if (row[0] in compare.keys()) and (len(compare[row[0]]) == 0):
-            compare[row[0]] = sorted(list(set(row[2][0]+row[2][1]).intersection(row[1])))
-            auto[row[0]] = sorted(row[2][0] + row[2][1])
+        elif (row[0] in compare.keys()) and (len(compare[row[0]]) == 0):
+            compare[row[0]] = sorted(list(set(row[2][1]).intersection(row[1])))
+            auto[row[0]] = row[2][1]
+        # if autocoder found no ADM1 or ADM2 locations or no ADM1 or ADM2 location matches, look for country matches in toolkit
         if (row[0] not in compare.keys()) or (len(compare[row[0]]) == 0):
             compare[row[0]] = sorted(list(set(row[2][2]).intersection(row[1])))
             auto[row[0]] = row[2][2]
